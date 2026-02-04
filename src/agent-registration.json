@@ -1,0 +1,21 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "Agent Viber",
+  "description": "Create 5-second animated videos of your AI agent doing things (typing code, analyzing data, thinking, searching, connecting). $0.10 per animation. Supports 5 scenes and 4 moods.",
+  "image": "https://agent-viber-production.up.railway.app/logo.png",
+  "services": [
+    {
+      "name": "web",
+      "endpoint": "https://agent-viber-production.up.railway.app/"
+    },
+    {
+      "name": "x402",
+      "endpoint": "https://agent-viber-production.up.railway.app/",
+      "version": "1.0"
+    }
+  ],
+  "x402Support": true,
+  "active": true,
+  "registrations": [],
+  "supportedTrust": ["reputation"]
+}
