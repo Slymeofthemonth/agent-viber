@@ -15,10 +15,10 @@ export const Monitor: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
   
-  // Characters revealed over time
+  // SLOWER: Characters revealed over time (use 80% of duration instead of faster)
   const totalChars = CODE_LINES.join("\n").length;
   const charsToShow = Math.floor(
-    interpolate(frame, [0, durationInFrames - 30], [0, totalChars], {
+    interpolate(frame, [0, durationInFrames * 0.85], [0, totalChars], {
       extrapolateRight: "clamp",
     })
   );
@@ -34,8 +34,8 @@ export const Monitor: React.FC = () => {
     return line.slice(0, charsToShow - lineStart);
   });
   
-  // Cursor blink
-  const cursorVisible = Math.floor(frame / (fps / 2)) % 2 === 0;
+  // Cursor blink (slower)
+  const cursorVisible = Math.floor(frame / (fps / 1.5)) % 2 === 0;
 
   const getLineColor = (fullLine: string): string => {
     if (fullLine.startsWith("//")) return "#6a9955";
@@ -121,26 +121,16 @@ export const Monitor: React.FC = () => {
           marginTop: -2,
         }}
       />
-      
-      {/* Keyboard */}
-      <div
-        style={{
-          marginTop: 12,
-          background: "linear-gradient(180deg, #2a2a2a, #1a1a1a)",
-          borderRadius: 6,
-          padding: 6,
-          boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
-        }}
-      >
-        <Keyboard frame={frame} />
-      </div>
     </div>
   );
 };
 
-const Keyboard: React.FC<{ frame: number }> = ({ frame }) => {
-  // Animate key presses
-  const activeKey = frame % 12;
+// Separate keyboard component for the middle
+export const Keyboard: React.FC = () => {
+  const frame = useCurrentFrame();
+  
+  // SLOWER: Key press animation (every 8 frames instead of every 12)
+  const activeKey = Math.floor(frame / 8) % 27;
   
   const rows = [
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -149,46 +139,56 @@ const Keyboard: React.FC<{ frame: number }> = ({ frame }) => {
   ];
   
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-      {rows.map((row, rowIndex) => (
-        <div key={rowIndex} style={{ display: "flex", gap: 2, justifyContent: "center" }}>
-          {row.map((keyId) => {
-            const isActive = keyId === activeKey || keyId === (activeKey + 5) % 27;
-            return (
-              <div
-                key={keyId}
-                style={{
-                  width: rowIndex === 2 ? 14 : 12,
-                  height: 10,
-                  background: isActive 
-                    ? "linear-gradient(180deg, #39ff14, #2eb82e)" 
-                    : "linear-gradient(180deg, #4a4a4a, #3a3a3a)",
-                  borderRadius: 2,
-                  boxShadow: isActive 
-                    ? "0 0 8px #39ff14" 
-                    : "inset 0 -1px 0 rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)",
-                  transform: isActive ? "translateY(1px)" : "none",
-                }}
-              />
-            );
-          })}
+    <div
+      style={{
+        background: "linear-gradient(180deg, #2a2a2a, #1a1a1a)",
+        borderRadius: 8,
+        padding: 10,
+        boxShadow: "0 6px 20px rgba(0,0,0,0.5)",
+        transform: "rotate(-45deg)",
+      }}
+    >
+      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        {rows.map((row, rowIndex) => (
+          <div key={rowIndex} style={{ display: "flex", gap: 3, justifyContent: "center" }}>
+            {row.map((keyId) => {
+              const isActive = keyId === activeKey || keyId === (activeKey + 13) % 27;
+              return (
+                <div
+                  key={keyId}
+                  style={{
+                    width: rowIndex === 2 ? 16 : 14,
+                    height: 12,
+                    background: isActive 
+                      ? "linear-gradient(180deg, #39ff14, #2eb82e)" 
+                      : "linear-gradient(180deg, #4a4a4a, #3a3a3a)",
+                    borderRadius: 3,
+                    boxShadow: isActive 
+                      ? "0 0 10px #39ff14" 
+                      : "inset 0 -1px 0 rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)",
+                    transform: isActive ? "translateY(1px)" : "none",
+                  }}
+                />
+              );
+            })}
+          </div>
+        ))}
+        {/* Spacebar */}
+        <div style={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
+          <div
+            style={{
+              width: 90,
+              height: 12,
+              background: Math.floor(frame / 12) % 3 === 0
+                ? "linear-gradient(180deg, #39ff14, #2eb82e)"
+                : "linear-gradient(180deg, #4a4a4a, #3a3a3a)",
+              borderRadius: 3,
+              boxShadow: Math.floor(frame / 12) % 3 === 0
+                ? "0 0 10px #39ff14"
+                : "inset 0 -1px 0 rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)",
+            }}
+          />
         </div>
-      ))}
-      {/* Spacebar */}
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <div
-          style={{
-            width: 80,
-            height: 10,
-            background: frame % 8 < 2 
-              ? "linear-gradient(180deg, #39ff14, #2eb82e)"
-              : "linear-gradient(180deg, #4a4a4a, #3a3a3a)",
-            borderRadius: 2,
-            boxShadow: frame % 8 < 2
-              ? "0 0 8px #39ff14"
-              : "inset 0 -1px 0 rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)",
-          }}
-        />
       </div>
     </div>
   );
