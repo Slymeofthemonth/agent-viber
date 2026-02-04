@@ -1,16 +1,17 @@
 import React from "react";
 import { useCurrentFrame, useVideoConfig, spring, interpolate } from "remotion";
+import { NetworkIcon } from "./Icons";
 
 type Props = {
   delay: number;
   x: number;
   y: number;
-  label: string;
+  iconType: string;
   centerX: number;
   centerY: number;
 };
 
-export const NetworkNode: React.FC<Props> = ({ delay, x, y, label, centerX, centerY }) => {
+export const NetworkNode: React.FC<Props> = ({ delay, x, y, iconType, centerX, centerY }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   
@@ -69,7 +70,7 @@ export const NetworkNode: React.FC<Props> = ({ delay, x, y, label, centerX, cent
           boxShadow: "0 0 20px rgba(96, 165, 250, 0.4)",
         }}
       >
-        <span style={{ fontSize: 20 }}>{label}</span>
+        <NetworkIcon type={iconType} size={28} />
       </div>
     </>
   );

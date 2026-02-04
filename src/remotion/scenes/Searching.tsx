@@ -3,6 +3,7 @@ import { AbsoluteFill, useCurrentFrame, interpolate } from "remotion";
 import type { AnimationProps } from "../types";
 import { Avatar } from "../components/Avatar";
 import { SearchResult } from "../components/SearchResult";
+import { MagnifyingGlass } from "../components/Icons";
 
 export const Searching: React.FC<AnimationProps> = ({ avatarUrl, mood }) => {
   const frame = useCurrentFrame();
@@ -21,18 +22,17 @@ export const Searching: React.FC<AnimationProps> = ({ avatarUrl, mood }) => {
         padding: 30,
       }}
     >
-      {/* Magnifying glass icon */}
+      {/* Magnifying glass icon (SVG) */}
       <div
         style={{
           position: "absolute",
           left: 50,
           top: 80,
-          fontSize: 50,
           transform: `rotate(${sweepAngle}deg) scale(${sweepScale})`,
           opacity: interpolate(frame, [0, 20, 60, 80], [0, 1, 1, 0]),
         }}
       >
-        🔍
+        <MagnifyingGlass size={60} />
       </div>
       
       {/* Avatar with lean */}

@@ -5,12 +5,12 @@ import { Avatar } from "../components/Avatar";
 import { NetworkNode } from "../components/NetworkNode";
 
 const NODES = [
-  { x: 80, y: 100, label: "🌐", delay: 20 },
-  { x: 420, y: 80, label: "📡", delay: 40 },
-  { x: 450, y: 280, label: "💾", delay: 60 },
-  { x: 400, y: 420, label: "🔗", delay: 80 },
-  { x: 100, y: 400, label: "⚡", delay: 100 },
-  { x: 50, y: 250, label: "🤖", delay: 120 },
+  { x: 80, y: 100, iconType: "web", delay: 20 },
+  { x: 420, y: 80, iconType: "signal", delay: 40 },
+  { x: 450, y: 280, iconType: "data", delay: 60 },
+  { x: 400, y: 420, iconType: "link", delay: 80 },
+  { x: 100, y: 400, iconType: "bolt", delay: 100 },
+  { x: 50, y: 250, iconType: "bot", delay: 120 },
 ];
 
 const CENTER_X = 256;
@@ -36,7 +36,7 @@ export const Connecting: React.FC<AnimationProps> = ({ avatarUrl, mood }) => {
           delay={node.delay}
           x={node.x}
           y={node.y}
-          label={node.label}
+          iconType={node.iconType}
           centerX={CENTER_X}
           centerY={CENTER_Y}
         />
