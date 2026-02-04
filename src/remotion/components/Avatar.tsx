@@ -60,8 +60,8 @@ export const Avatar: React.FC<AvatarProps> = ({
   let calmSwayX = 0;
   let calmSwayRotate = 0;
   if (mood === "calm") {
-    // Tick-tock swing (V shape - moves side to side with rotation)
-    const swayProgress = (adjustedFrame % (cycleFrames * 2)) / (cycleFrames * 2);
+    // Tick-tock swing (V shape - moves side to side with rotation) - faster cycle
+    const swayProgress = (adjustedFrame % cycleFrames) / cycleFrames;
     // Smooth sine wave for horizontal sway
     calmSwayX = Math.sin(swayProgress * Math.PI * 2) * 15;
     // Rotation follows the sway (tilts into the direction of movement)
