@@ -2,7 +2,7 @@ import React from "react";
 import { AbsoluteFill } from "remotion";
 import type { AnimationProps } from "../types";
 import { Avatar } from "../components/Avatar";
-import { CodeEditor } from "../components/CodeEditor";
+import { Monitor } from "../components/Monitor";
 
 export const TypingCode: React.FC<AnimationProps> = ({ avatarUrl, mood }) => {
   return (
@@ -11,7 +11,8 @@ export const TypingCode: React.FC<AnimationProps> = ({ avatarUrl, mood }) => {
         background: "linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)",
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-around",
+        justifyContent: "center",
+        gap: 40,
         padding: 30,
       }}
     >
@@ -20,8 +21,8 @@ export const TypingCode: React.FC<AnimationProps> = ({ avatarUrl, mood }) => {
         <Avatar url={avatarUrl} mood={mood} />
       </div>
       
-      {/* Code editor on the right */}
-      <CodeEditor />
+      {/* Monitor with keyboard on the right */}
+      <Monitor />
     </AbsoluteFill>
   );
 };

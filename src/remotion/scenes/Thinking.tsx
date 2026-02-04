@@ -1,19 +1,28 @@
 import React from "react";
-import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring } from "remotion";
+import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate } from "remotion";
 import type { AnimationProps } from "../types";
 import { Avatar } from "../components/Avatar";
-import { ThoughtBubble } from "../components/ThoughtBubble";
+import { ScribbleBubble } from "../components/ScribbleBubble";
 
 export const Thinking: React.FC<AnimationProps> = ({ avatarUrl, mood }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { durationInFrames } = useVideoConfig();
   
-  // Lightbulb appears at the end
-  const lightbulbProgress = spring({
-    frame: frame - 100,
-    fps,
-    config: { damping: 10, stiffness: 100 },
-  });
+  // Warm glow intensity builds up over time
+  const glowIntensity = interpolate(
+    frame,
+    [0, durationInFrames * 0.7, durationInFrames],
+    [0.3, 0.8, 1],
+    { extrapolateRight: "clamp" }
+  );
+  
+  // Glow radius expands
+  const glowRadius = interpolate(
+    frame,
+    [0, durationInFrames],
+    [100, 250],
+    { extrapolateRight: "clamp" }
+  );
   
   // Floating effect for avatar
   const floatY = Math.sin(frame * 0.03) * 8;
@@ -21,35 +30,86 @@ export const Thinking: React.FC<AnimationProps> = ({ avatarUrl, mood }) => {
   return (
     <AbsoluteFill
       style={{
-        background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
+        background: "linear-gradient(180deg, #1a1a2e 0%, #16213e 100%)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
       }}
     >
-      {/* Thought bubbles */}
-      <ThoughtBubble delay={20} x={80} y={100}>🤔</ThoughtBubble>
-      <ThoughtBubble delay={40} x={350} y={80}>💭</ThoughtBubble>
-      <ThoughtBubble delay={60} x={100} y={320}>⚡</ThoughtBubble>
-      <ThoughtBubble delay={80} x={360} y={350}>🧠</ThoughtBubble>
+      {/* Warm glow emanating from top */}
+      <div
+        style={{
+          position: "absolute",
+          top: -50,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: glowRadius * 2,
+          height: glowRadius * 1.5,
+          background: `radial-gradient(ellipse at center, 
+            rgba(255, 200, 100, ${glowIntensity * 0.6}) 0%,
+            rgba(255, 150, 50, ${glowIntensity * 0.4}) 30%,
+            rgba(255, 100, 50, ${glowIntensity * 0.2}) 60%,
+            transparent 100%
+          )`,
+          filter: "blur(20px)",
+          pointerEvents: "none",
+        }}
+      />
       
-      {/* Lightbulb moment */}
+      {/* Secondary warm glow (softer, wider) */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: glowRadius * 3,
+          height: glowRadius * 2,
+          background: `radial-gradient(ellipse at center top, 
+            rgba(255, 180, 80, ${glowIntensity * 0.3}) 0%,
+            transparent 70%
+          )`,
+          filter: "blur(40px)",
+          pointerEvents: "none",
+        }}
+      />
+      
+      {/* Thought bubble positioned above avatar */}
       <div
         style={{
           position: "absolute",
           top: 60,
-          left: 220,
-          fontSize: 60,
-          transform: `scale(${Math.min(lightbulbProgress, 1)})`,
-          opacity: lightbulbProgress,
-          filter: `drop-shadow(0 0 20px #facc15)`,
+          left: "50%",
+          transform: "translateX(-30%)",
         }}
       >
-        💡
+        <ScribbleBubble />
       </div>
       
       {/* Avatar centered with float */}
-      <div style={{ transform: `translateY(${floatY}px)` }}>
+      <div 
+        style={{ 
+          transform: `translateY(${floatY + 40}px)`,
+          position: "relative",
+        }}
+      >
+        {/* Subtle glow around avatar when thinking intensifies */}
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 200,
+            height: 200,
+            background: `radial-gradient(circle, 
+              rgba(255, 200, 100, ${glowIntensity * 0.15}) 0%,
+              transparent 70%
+            )`,
+            filter: "blur(15px)",
+            pointerEvents: "none",
+          }}
+        />
         <Avatar url={avatarUrl} mood={mood} />
       </div>
     </AbsoluteFill>
