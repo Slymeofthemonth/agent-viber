@@ -129,8 +129,8 @@ export const Monitor: React.FC = () => {
 export const Keyboard: React.FC = () => {
   const frame = useCurrentFrame();
   
-  // SLOWER: Key press animation (every 8 frames instead of every 12)
-  const activeKey = Math.floor(frame / 8) % 27;
+  // Key press animation (every 5 frames - slightly faster)
+  const activeKey = Math.floor(frame / 5) % 27;
   
   const rows = [
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -179,11 +179,11 @@ export const Keyboard: React.FC = () => {
             style={{
               width: 90,
               height: 12,
-              background: Math.floor(frame / 12) % 3 === 0
+              background: Math.floor(frame / 8) % 3 === 0
                 ? "linear-gradient(180deg, #39ff14, #2eb82e)"
                 : "linear-gradient(180deg, #4a4a4a, #3a3a3a)",
               borderRadius: 3,
-              boxShadow: Math.floor(frame / 12) % 3 === 0
+              boxShadow: Math.floor(frame / 8) % 3 === 0
                 ? "0 0 10px #39ff14"
                 : "inset 0 -1px 0 rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)",
             }}

@@ -9,29 +9,34 @@ export const TypingCode: React.FC<AnimationProps> = ({ avatarUrl, mood }) => {
     <AbsoluteFill
       style={{
         background: "linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "30px 40px",
+        position: "relative",
       }}
     >
-      {/* Monitor on the LEFT */}
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      {/* Monitor in TOP-LEFT */}
+      <div style={{ 
+        position: "absolute",
+        top: 30,
+        left: 30,
+      }}>
         <Monitor />
       </div>
       
-      {/* Keyboard in the MIDDLE, rotated 45 degrees */}
+      {/* Keyboard in CENTER, tilted */}
       <div style={{ 
-        display: "flex", 
-        alignItems: "center", 
-        justifyContent: "center",
-        marginTop: 40,
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
       }}>
         <Keyboard />
       </div>
       
-      {/* Avatar on the RIGHT */}
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      {/* Avatar in BOTTOM-RIGHT */}
+      <div style={{ 
+        position: "absolute",
+        bottom: 30,
+        right: 40,
+      }}>
         <Avatar url={avatarUrl} mood={mood} />
       </div>
     </AbsoluteFill>
