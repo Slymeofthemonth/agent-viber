@@ -56,6 +56,18 @@ export const Avatar: React.FC<AvatarProps> = ({
     ? (Math.cos(frame * 0.9) * 3) + (Math.sin(frame * 1.1) * 2)
     : 0;
   
+  // CALM mode: gentle V-shape tick-tock swaying motion
+  let calmSwayX = 0;
+  let calmSwayRotate = 0;
+  if (mood === "calm") {
+    // Tick-tock swing (V shape - moves side to side with rotation)
+    const swayProgress = (adjustedFrame % (cycleFrames * 2)) / (cycleFrames * 2);
+    // Smooth sine wave for horizontal sway
+    calmSwayX = Math.sin(swayProgress * Math.PI * 2) * 15;
+    // Rotation follows the sway (tilts into the direction of movement)
+    calmSwayRotate = Math.sin(swayProgress * Math.PI * 2) * 8;
+  }
+  
   // FOCUSED mode: zoom in over time, slight forward tilt, almost no bob
   let focusedZoom = 1;
   let focusedTilt = 0;
@@ -72,6 +84,10 @@ export const Avatar: React.FC<AvatarProps> = ({
     rotate = focusedTilt;
   }
 
+  // Apply calm sway to rotation if in calm mode
+  const finalRotate = mood === "calm" ? calmSwayRotate : rotate;
+  const finalX = mood === "calm" ? calmSwayX : jitterX;
+
   return (
     <Img
       src={url}
@@ -81,9 +97,9 @@ export const Avatar: React.FC<AvatarProps> = ({
         objectFit: "contain",
         transform: `
           translateY(${baseY + bobY + jitterY}px)
-          translateX(${jitterX}px)
+          translateX(${finalX}px)
           scale(${scale})
-          rotate(${rotate}deg)
+          rotate(${finalRotate}deg)
         `,
         filter: mood === "glitchy" 
           ? `hue-rotate(${(frame * 10) % 360}deg)` 
