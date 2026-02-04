@@ -20,7 +20,7 @@ export const RemotionRoot: React.FC = () => {
       height={COMPOSITION_HEIGHT}
       defaultProps={{
         scene: "TYPING_CODE",
-        avatarUrl: "https://via.placeholder.com/200",
+        avatarUrl: "https://slymebot.dev/slyme.svg",
         mood: "calm",
       } as AnimationProps}
     />

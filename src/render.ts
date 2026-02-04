@@ -17,7 +17,7 @@ let bundled: string | null = null;
 async function getBundled(): Promise<string> {
   if (bundled) return bundled;
   
-  const entryPoint = path.join(process.cwd(), "src/remotion/Root.tsx");
+  const entryPoint = path.join(process.cwd(), "src/remotion/index.tsx");
   bundled = await bundle({
     entryPoint,
     onProgress: (progress) => {
