@@ -12,21 +12,23 @@ export const TypingCode: React.FC<AnimationProps> = ({ avatarUrl, mood }) => {
         position: "relative",
       }}
     >
-      {/* Monitor in TOP-LEFT */}
+      {/* Monitor in TOP-LEFT (scaled down) */}
       <div style={{ 
         position: "absolute",
-        top: 30,
-        left: 30,
+        top: 25,
+        left: 25,
+        transform: "scale(0.8)",
+        transformOrigin: "top left",
       }}>
         <Monitor />
       </div>
       
-      {/* Keyboard in CENTER, tilted */}
+      {/* Keyboard in CENTER, tilted (scaled down) */}
       <div style={{ 
         position: "absolute",
-        top: "50%",
+        top: "55%",
         left: "50%",
-        transform: "translate(-50%, -50%)",
+        transform: "translate(-50%, -50%) scale(0.75)",
       }}>
         <Keyboard />
       </div>
