@@ -17,7 +17,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   baseScale = 1,
 }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, durationInFrames } = useVideoConfig();
   const config = MOOD_CONFIGS[mood];
   
   // Adjust frame by speed multiplier
@@ -33,7 +33,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   );
   
   // Subtle scale pulse
-  const scale = interpolate(
+  let scale = interpolate(
     adjustedFrame % cycleFrames,
     [0, cycleFrames / 2, cycleFrames],
     [baseScale, baseScale + config.scaleRange, baseScale],
@@ -41,7 +41,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   );
   
   // Gentle rotation
-  const rotate = interpolate(
+  let rotate = interpolate(
     adjustedFrame % (cycleFrames * 2),
     [0, cycleFrames, cycleFrames * 2],
     [-config.rotateRange, config.rotateRange, -config.rotateRange],
@@ -55,6 +55,22 @@ export const Avatar: React.FC<AvatarProps> = ({
   const jitterY = mood === "glitchy"
     ? (Math.cos(frame * 0.9) * 3) + (Math.sin(frame * 1.1) * 2)
     : 0;
+  
+  // FOCUSED mode: zoom in over time, slight forward tilt, almost no bob
+  let focusedZoom = 1;
+  let focusedTilt = 0;
+  let focusedGlow = 0;
+  if (mood === "focused") {
+    // Gradual zoom in (1.0 to 1.15 over duration)
+    focusedZoom = interpolate(frame, [0, durationInFrames], [1, 1.15], { extrapolateRight: "clamp" });
+    // Slight forward tilt (leaning in)
+    focusedTilt = interpolate(frame, [0, durationInFrames * 0.3], [0, -3], { extrapolateRight: "clamp" });
+    // Intensity glow
+    focusedGlow = interpolate(frame, [0, durationInFrames], [0, 0.4], { extrapolateRight: "clamp" });
+    // Override scale to use zoom
+    scale = baseScale * focusedZoom;
+    rotate = focusedTilt;
+  }
 
   return (
     <Img
@@ -71,6 +87,8 @@ export const Avatar: React.FC<AvatarProps> = ({
         `,
         filter: mood === "glitchy" 
           ? `hue-rotate(${(frame * 10) % 360}deg)` 
+          : mood === "focused"
+          ? `drop-shadow(0 0 ${8 + focusedGlow * 15}px rgba(96, 165, 250, ${focusedGlow}))`
           : undefined,
       }}
     />
