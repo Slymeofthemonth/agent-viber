@@ -129,8 +129,18 @@ export const Monitor: React.FC = () => {
 export const Keyboard: React.FC = () => {
   const frame = useCurrentFrame();
   
-  // Key press animation (every 5 frames - slightly faster)
-  const activeKey = Math.floor(frame / 5) % 27;
+  // Multiple keys light up with varied timing for natural typing feel
+  // Using prime numbers and offsets for pseudo-random but deterministic pattern
+  const isKeyActive = (keyId: number): boolean => {
+    const patterns = [
+      Math.floor(frame / 4) % 27,           // Fast typist finger 1
+      (Math.floor(frame / 6) + 7) % 27,     // Finger 2 offset
+      (Math.floor(frame / 5) + 14) % 27,    // Finger 3 offset  
+      (Math.floor(frame / 7) + 21) % 27,    // Finger 4 offset
+      (Math.floor(frame / 3) + 3) % 27,     // Quick tap
+    ];
+    return patterns.includes(keyId);
+  };
   
   const rows = [
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -152,7 +162,7 @@ export const Keyboard: React.FC = () => {
         {rows.map((row, rowIndex) => (
           <div key={rowIndex} style={{ display: "flex", gap: 3, justifyContent: "center" }}>
             {row.map((keyId) => {
-              const isActive = keyId === activeKey || keyId === (activeKey + 13) % 27;
+              const isActive = isKeyActive(keyId);
               return (
                 <div
                   key={keyId}
@@ -179,11 +189,11 @@ export const Keyboard: React.FC = () => {
             style={{
               width: 90,
               height: 12,
-              background: Math.floor(frame / 8) % 3 === 0
+              background: Math.floor(frame / 10) % 4 === 0
                 ? "linear-gradient(180deg, #39ff14, #2eb82e)"
                 : "linear-gradient(180deg, #4a4a4a, #3a3a3a)",
               borderRadius: 3,
-              boxShadow: Math.floor(frame / 8) % 3 === 0
+              boxShadow: Math.floor(frame / 10) % 4 === 0
                 ? "0 0 10px #39ff14"
                 : "inset 0 -1px 0 rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)",
             }}
